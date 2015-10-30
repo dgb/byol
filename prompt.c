@@ -24,11 +24,11 @@ void add_history(char *unused) {}
 #include <editline/readline.h>
 
 int main(int argc, char **argv) {
-  puts("Lispy Version 0.0.0.0.3");
+  puts("Byol Version 0.0.0.0.4");
   puts("Press Ctrl+c to Exit\n");
 
   while (1) {
-    char *input = readline("lispy> ");
+    char *input = readline("byol> ");
 
     add_history(input);
 
