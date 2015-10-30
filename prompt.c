@@ -6,7 +6,7 @@
 
 static char buffer[2048];
 
-char* readline(char *prompt) {
+char *readline(char *prompt) {
   fputs(prompt, stdout);
   fgets(buffer, 2048, stdin);
   char *cpy = malloc(strlen(buffer)+1);
