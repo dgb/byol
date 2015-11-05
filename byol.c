@@ -263,7 +263,31 @@ lval *builtin_cons(lval *a) {
   return x;
 }
 
+lval *builtin_len(lval *a) {
+  LASSERT(a, a->count == 1,
+    "Function 'len' passed wrong number of arguments!");
 
+  LASSERT(a, a->cell[0]->type == LVAL_QEXPR,
+    "Function 'len' passed incorrect types!");
+
+  lval *x = lval_num(a->cell[0]->count);
+
+  lval_del(a);
+
+  return x;
+}
+
+lval *builtin_init(lval *a) {
+  LASSERT(a, a->count == 1,
+    "Function 'init' passed wrong number of arguments!");
+
+  LASSERT(a, a->cell[0]->type == LVAL_QEXPR,
+    "Function 'init' passed incorrect types!");
+
+  lval_del(lval_pop(a->cell[0], a->cell[0]->count-1));
+
+  return lval_join(lval_qexpr(), a->cell[0]);
+}
 
 lval *builtin_op(lval *a, char *op) {
   for (int i = 0; i < a->count; i++) {
@@ -315,6 +339,8 @@ lval *builtin(lval *a, char *func) {
   if (strcmp("join", func) == 0) { return builtin_join(a); }
   if (strcmp("eval", func) == 0) { return builtin_eval(a); }
   if (strcmp("cons", func) == 0) { return builtin_cons(a); }
+  if (strcmp("len",  func) == 0) { return builtin_len(a); }
+  if (strcmp("init", func) == 0) { return builtin_init(a); }
   if (strstr("+-/*%^", func))    { return builtin_op(a, func); }
 
   lval_del(a);
