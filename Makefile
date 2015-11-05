@@ -1,7 +1,7 @@
 CFLAGS=-std=c99 -Wall
 
-parsing: parsing.c mpc.c
+byol: byol.c mpc.c
 	$(CC) $(CFLAGS) $^ -ledit -lm -o $@
 
 clean:
-	rm parsing
+	rm byol
