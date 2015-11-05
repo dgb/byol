@@ -246,6 +246,25 @@ lval *builtin_join(lval *a) {
   return x;
 }
 
+lval *builtin_cons(lval *a) {
+  LASSERT(a, a->count == 2,
+    "Function 'cons' passed wrong number of arguments!");
+
+  LASSERT(a, a->cell[1]->type == LVAL_QEXPR,
+    "Function 'cons' passed incorrect types!");
+
+  lval *v = lval_qexpr();
+  lval_add(v, lval_pop(a, 0));
+
+  lval *x = lval_join(v, lval_pop(a, 0));
+
+  lval_del(a);
+
+  return x;
+}
+
+
+
 lval *builtin_op(lval *a, char *op) {
   for (int i = 0; i < a->count; i++) {
     if (a->cell[i]->type != LVAL_NUM) {
@@ -295,6 +314,7 @@ lval *builtin(lval *a, char *func) {
   if (strcmp("tail", func) == 0) { return builtin_tail(a); }
   if (strcmp("join", func) == 0) { return builtin_join(a); }
   if (strcmp("eval", func) == 0) { return builtin_eval(a); }
+  if (strcmp("cons", func) == 0) { return builtin_cons(a); }
   if (strstr("+-/*%^", func))    { return builtin_op(a, func); }
 
   lval_del(a);
@@ -343,6 +363,7 @@ int main(int argc, char **argv) {
     "                                                               \
       number : /-?[0-9]+/ ;                                         \
       symbol : \"list\" | \"head\" | \"tail\" | \"join\" | \"eval\" \
+             | \"cons\" | \"len\"  | \"init\"                       \
              |'+' | '-' | '*' | '/' | '%' |'^';                     \
       sexpr  : '(' <expr>* ')' ;                                    \
       qexpr  : '{' <expr>* '}' ;                                    \
